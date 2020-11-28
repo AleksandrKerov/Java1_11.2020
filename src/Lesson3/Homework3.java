@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Homework3 {
+    public static Scanner sc = new Scanner(System.in);
     public static void main(String[] args) {
 
         guessNumber();
@@ -15,13 +16,13 @@ public class Homework3 {
                 "pepper", "pineapple", "pumpkin", "potato"};
 
         guessWord(words);
+        sc.close();
     }
 
     public static void guessNumber() {
         Random rand = new Random();
         int numberAi = rand.nextInt(10);
 
-        Scanner sc = new Scanner(System.in);
         System.out.print("Game: Guess the number!\nEnter the number from 0 to 9:");
         int numberUser = sc.nextInt();
 
@@ -48,15 +49,12 @@ public class Homework3 {
         if (game == 1) {
             guessNumber();
         }
-        sc.close();
     }
 
     public static void guessWord(String[] words) {
         Random rand = new Random();
         int wordsNumber = rand.nextInt(words.length);
         System.out.println(words[wordsNumber]);
-
-        Scanner sc = new Scanner(System.in);
 
         while (true) {
             System.out.print("Enter the word: ");
@@ -74,7 +72,6 @@ public class Homework3 {
                     }
                 }
             }
-            sc.close();
         }
     }
 
