@@ -4,8 +4,8 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Homework4 {
-    static final int SIZE = 3;
-//    static final int DOTS_TO_WIN = 3;
+    static final int SIZE = 5;
+    static final int DOTS_TO_WIN = 4;
 
     static final char DOT_X = 'X';
     static final char DOT_O = 'O';
@@ -18,30 +18,17 @@ public class Homework4 {
 
     public static void main(String[] args) {
 
-
         initMap();
         printMap();
 
         while (true) {
             humanTurn();
-            printMap();
-            if (checkWin(DOT_X)) {
-                System.out.println("Вы выиграли!!!");
-                break;
-            }
-            if (isFull()) {
-                System.out.println("Ничья");
+            if (isEndGame(DOT_X)) {
                 break;
             }
 
             aiTurn();
-            printMap();
-            if (checkWin(DOT_O)) {
-                System.out.println("Комьютер победил");
-                break;
-            }
-            if (isFull()) {
-                System.out.println("Ничья");
+            if (isEndGame(DOT_O)) {
                 break;
             }
         }
@@ -85,6 +72,32 @@ public class Homework4 {
     static void aiTurn() {
         int x;
         int y;
+
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (isCellValid(i, j)) {
+                    map[i][j] = DOT_O;
+                    if (checkWin(DOT_O, DOTS_TO_WIN)) {
+                        return;
+                    }
+                    map[i][j] = DOT_EMPTY;
+                }
+            }
+        }
+
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (isCellValid(i, j)) {
+                    map[i][j] = DOT_X;
+                    if (checkWin(DOT_X, DOTS_TO_WIN)) {
+                        map[i][j] = DOT_O;
+                        return;
+                    }
+                    map[i][j] = DOT_EMPTY;
+                }
+            }
+        }
+
         do {
             x = random.nextInt(SIZE);
             y = random.nextInt(SIZE);
@@ -110,18 +123,47 @@ public class Homework4 {
         return true;
     }
 
-    static boolean checkWin(char c) {
-        if (map[0][0] == c && map[0][1] == c && map[0][2] == c) { return true; }
-        if (map[1][0] == c && map[1][1] == c && map[1][2] == c) { return true; }
-        if (map[2][0] == c && map[2][1] == c && map[2][2] == c) { return true; }
+    public static boolean checkStraight(int line, int column, int y, int x, char playerSymbol, int dotsToWin) {
+        if (line + y * (dotsToWin - 1) > SIZE - 1 || column + x * (dotsToWin - 1) > SIZE - 1 ||
+                line + y * (dotsToWin - 1) < 0) {
+            return false;
+        }
+        for (int i = 0; i < dotsToWin; i++) {
+            if (map[line + i * y][column + i * x] != playerSymbol)
+                return false;
+        }
+        return true;
+    }
 
-        if (map[0][0] == c && map[1][0] == c && map[2][0] == c) { return true; }
-        if (map[0][1] == c && map[1][1] == c && map[2][1] == c) { return true; }
-        if (map[0][2] == c && map[1][2] == c && map[2][2] == c) { return true; }
+    public static boolean checkWin(char playerSymbol, int dotsToWin) {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (checkStraight(i, j, 0, 1, playerSymbol, dotsToWin)) {
+                    return true;
+                }
+                if (checkStraight(i, j, 1, 0, playerSymbol, dotsToWin)) {
+                    return true;
+                }
+                if (checkStraight(i, j, 1, 1, playerSymbol, dotsToWin)) {
+                    return true;
+                }
+                if (checkStraight(i, j, -1, 1, playerSymbol, dotsToWin)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-        if (map[0][0] == c && map[1][1] == c && map[2][2] == c) { return true; }
-        if (map[0][2] == c && map[1][1] == c && map[2][0] == c) { return true; }
-
+    private static boolean isEndGame(char playerSymbol) {
+        printMap();
+        if (checkWin(playerSymbol, DOTS_TO_WIN)) {
+            System.out.println("Win " + playerSymbol);
+            return true;
+        } else if (isFull()) {
+            System.out.println("Draw");
+            return true;
+        }
         return false;
     }
 
