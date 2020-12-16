@@ -73,6 +73,9 @@ public class SettingWindow extends JFrame {
             Lesson8.Logic.DOTS_TO_WIN = winningLength;
             Lesson8.Logic.initMap();
             Lesson8.Logic.gameFinished = false;
+            Logic.draw = false;
+            Logic.aiWin = false;
+            Logic.userWin = false;
 
             gameWindow.startNewGame(mode, fieldSize, winningLength);
 

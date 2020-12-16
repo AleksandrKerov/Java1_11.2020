@@ -24,7 +24,7 @@ public class BattleMap extends JPanel {
     public BattleMap(Lesson8.GameWindow gameWindow) {
         this.gameWindow = gameWindow;
 
-        setBackground(Color.ORANGE);
+        setBackground(Color.GRAY);
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -39,6 +39,16 @@ public class BattleMap extends JPanel {
                     // например через gameWindow
                 }
                 repaint();
+                if (Logic.userWin) {
+                    JOptionPane.showMessageDialog(null, "User win");
+                }
+                if (Logic.aiWin) {
+                    JOptionPane.showMessageDialog(null, "Computer win");
+                }
+                if (Logic.draw) {
+                    JOptionPane.showMessageDialog(null, "draw");
+                }
+
             }
         });
     }
@@ -74,10 +84,12 @@ public class BattleMap extends JPanel {
 
         for (int i = 0; i < Lesson8.Logic.SIZE; i++) {
             for (int j = 0; j < Lesson8.Logic.SIZE; j++) {
-                if(Lesson8.Logic.map[i][j] == Lesson8.Logic.DOT_X){
+                if (Lesson8.Logic.map[i][j] == Lesson8.Logic.DOT_X) {
                     drawX(g, j, i);
                 }
-
+                if (Lesson8.Logic.map[i][j] == Logic.DOT_O) {
+                    drawO(g, j, i);
+                }
 
             }
         }
@@ -95,5 +107,14 @@ public class BattleMap extends JPanel {
         g.setColor(Color.RED);
         g.drawLine(cellX * cellWidth, cellY * cellHeight,
                 (cellX + 1) * cellWidth, (cellY + 1) * cellHeight);
+        g.drawLine(cellX * cellWidth, (cellY + 1) * cellHeight,
+                (cellX + 1) * cellWidth, cellY * cellHeight);
+    }
+
+    private void drawO(Graphics g, int cellX, int cellY) {
+        ((Graphics2D) g).setStroke(new BasicStroke(5));
+        g.setColor(Color.GREEN);
+        g.drawOval(cellX * cellWidth, cellY * cellHeight,
+                cellWidth, cellHeight);
     }
 }

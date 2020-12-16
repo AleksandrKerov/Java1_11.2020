@@ -15,28 +15,29 @@ public class Logic {
     static Random random = new Random();
 
     static boolean gameFinished;
+    static boolean userWin;
+    static boolean aiWin;
+    static boolean draw;
 
     public static void go() {
         gameFinished = true;
 
         printMap();
         if (checkWinLines(DOT_X, DOTS_TO_WIN)) {
-            System.out.println("Вы выиграли!!!");
+            userWin = true;
             return;
         }
         if (isFull()) {
-            System.out.println("Ничья");
             return;
         }
 
         aiTurn();
         printMap();
         if (checkWinLines(DOT_O, DOTS_TO_WIN)) {
-            System.out.println("Комьютер победил");
+            aiWin = true;
             return;
         }
         if (isFull()) {
-            System.out.println("Ничья");
             return;
         }
 
@@ -144,6 +145,7 @@ public class Logic {
                 }
             }
         }
+        draw = true;
         return true;
     }
 
